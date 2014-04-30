@@ -1,0 +1,48 @@
+autoload -U colors && colors
+
+setopt PROMPT_SUBST
+
+reset="%{$fg[default]%}"
+user_color="%{$fg[yellow]%}"
+host_color="%{$fg[green]%}"
+dir_color="%{$fg[cyan]%}"
+git_color="%{$fg[magenta]%}"
+
+user_prefix=""
+
+user_id=$(id -u)
+
+# Add a lightning bolt if root or SSHed
+if [ $user_id -eq 0 ] || [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    user_prefix="⚡︎ "
+
+    if [ $user_id -eq 0 ]; then
+        user_color="%{$fg[red]%}"
+    else
+        host_color="%{$fg[red]%}"
+    fi
+fi
+
+# $ if normal and # if root
+prompt_char="$user_color%(#.#.$)"
+
+# Setup VSC
+autoload -Uz vcs_info
+
+function precmd() {
+    vcs_info
+}
+
+zstyle ':vcs_info:*' enable bzr git hg svn
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' unstagedstr '!'
+zstyle ':vcs_info:*' stagedstr '+'
+zstyle ':vcs_info:*' actionformats '%F{5}(%f%s%F{5})%F{3}-%F{5}[%F{2}%b%F{3}|%F{1}%a%F{5}]%f '
+zstyle ':vcs_info:*' formats ' %F{magenta}(%b)%f%F{yellow}%B%u%c%%b%f '
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{3}%r'
+
+PROMPT="$user_color$user_prefix%n$reset@$host_color%m$reset in $dir_color%~$reset"'${vcs_info_msg_0_}'"$reset
+$prompt_char$reset "
+RPROMPT='%@'
+
+unset reset user_color host_color dir_color git_color user_prefix user_id prompt_char prompt_git
