@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+echo "=============================================="
+echo "= Welcome to JaDR, installation is beginning ="
+echo "=============================================="
+
+cd "$(dirname "${BASH_SOURCE}")"
+DOTFILES=$(pwd)
+
+export PATH="$DOTFILES/dockutil/scripts/":$PATH
+
+# Add ~/bin if it doesn't exist
+if [ ! -d ~/bin ]; then
+    mkdir ~/bin
+fi
+
+
+# Install homebrew if not installed
+if ! command -v brew >/dev/null 2>&1; then
+    echo
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    echo "~           Installing Homebrew...           ~"
+    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+    ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
+fi
+
+echo
+echo
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "~            Updating Homebrew...            ~"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
+echo
+echo
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+echo "~     Installing CLI Homebrew Packages...    ~"
+echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+brew install zsh git
+brew install coreutils gnu-sed --default-names
+
+#/usr/bin/env bash defaults.osx
