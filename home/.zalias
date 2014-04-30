@@ -1,0 +1,1 @@
+alias macchanger="sudo ifconfig en1 ether"
