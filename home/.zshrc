@@ -5,4 +5,10 @@ fi
 
 source "$HOME/.homesick/repos/homeshick/homeshick.sh"
 
-fpath=($HOME/.homesick/repos/homeshick/completions $fpath)
+if [ -f .zprompt ]; then
+    source .zprompt
+fi
+
+if [ -f .zalias ]; then
+    source .zalias
+fi
