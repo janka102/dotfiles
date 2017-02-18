@@ -16,9 +16,9 @@ echo ''
 
 # Set computer name
 echo 'Setting computer name, requires sudo:'
-sudo scutil --set ComputerName 'rockbook'
-sudo scutil --set HostName 'rockbook'
-sudo scutil --set LocalHostName 'rockbook'
+sudo scutil --set ComputerName 'falcon'
+sudo scutil --set HostName 'falcon'
+sudo scutil --set LocalHostName 'falcon'
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=' '
