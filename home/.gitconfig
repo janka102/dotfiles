@@ -1,0 +1,5 @@
+[alias]
+	s = status -s
+	ca = !git add -A && git commit -avm
+[core]
+	excludesfile = ~/.gitignore
