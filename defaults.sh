@@ -65,6 +65,17 @@ echo ''
 echo 'Disabling Remote Control Infrared Receiver, requires sudo:'
 sudo defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0
 
+# Sets Screen Saver
+defaults -currentHost write com.apple.ScreenSaverPhotoChooser CustomFolderDict -dict identifier "${HOME}/Documents/Google Drive/Wallpapers" name 'Wallpapers'
+defaults -currentHost write com.apple.ScreenSaverPhotoChooser SelectedFolderPath -string "${HOME}/Documents/Google Drive/Wallpapers"
+defaults -currentHost write com.apple.ScreenSaverPhotoChooser SelectedSource -int 4
+
+defaults -currentHost write com.apple.ScreenSaver.iLifeSlideShows styleKey -string 'ShiftingTiles'
+
+defaults -currentHost write com.apple.screensaver showClock -bool true
+defaults -currentHost write com.apple.screensaver moduleDict -dict-add moduleName 'iLifeSlideshows'
+defaults -currentHost write com.apple.screensaver moduleDict -dict-add path '/System/Library/Frameworks/ScreenSaver.framework/Resources/iLifeSlideshows.saver'
+
 #=========
 # Firewall
 #=========
