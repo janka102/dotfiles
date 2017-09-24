@@ -38,7 +38,10 @@ PROMPT="$(build_prompt)"
 # Examples
 #
 # user in ~/path
-# $ 
+# % 
+#
+# root in ~/path
+# # 
 #
 # user@ssh_machine in ~/path
-# $ 
+# % 
