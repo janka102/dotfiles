@@ -15,7 +15,7 @@ if ! command -v brew >/dev/null 2>&1; then
   cd $(mktemp -d)
   curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install -o install_brew
   echo 'Opening homebrew install file'
-  echo 'Review, edit, save and exit'
+  echo 'Review, edit, save, and exit'
   read -p 'Any key to continue' -n 1 -s
   nano install_brew
 
@@ -40,24 +40,24 @@ brew upgrade
 
 echo 'Installing terminal programs...'
 # Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`
-brew install coreutils bash zsh
-brew install node git openssl
-brew install imagemagick p7zip android-platform-tools clang-format
+brew install bash coreutils openssl zsh                            # system stuff
+brew install clang-format git git-town htop node sshfs             # things used often to kinda often
+brew install imagemagick optipng p7zip wget # things used not so often
 
 if ! fgrep -q '/usr/local/bin/zsh' /etc/shells; then
   echo 'Switching shell to newly installed zsh... requires sudo:'
-  echo '/usr/local/bin/zsh' | sudo tee -a /etc/shells;
-  chsh -s /usr/local/bin/zsh;
+  echo '/usr/local/bin/zsh' | sudo tee -a /etc/shells
+  chsh -s /usr/local/bin/zsh
 fi
 
 echo 'Installing fonts...'
 brew tap caskroom/fonts
-brew cask install font-source-code-pro-for-powerline
+brew cask install font-fira-code font-source-code-pro-for-powerline
 
 echo 'Installing GUI apps via cask...'
-brew cask install firefox flux google-chrome gpgtools iterm2
-brew cask install java keepingyouawake slack spotify
-brew cask install usb-overdrive visual-studio-code vlc
+brew cask install android-platform-tools firefox flux google-chrome
+brew cask install gpgtools iterm2 java keepingyouawake osxfuse slack
+brew cask install spotify usb-overdrive visual-studio-code vlc
 
 # Install quicklook plugins
 brew cask install qlcolorcode qlstephen suspicious-package
