@@ -1,24 +1,40 @@
 #!/usr/bin/env bash
 
-########################################################################
 # Sets up settings for the system and various apps
 # Some from https://github.com/mathiasbynens/dotfiles/blob/master/.macos
-########################################################################
+#
+# Options:
+#   -s, --skip  Ignore prompts, and skip them
+#
+# Environment variables:
+#   host_name  The computer/host name to use for setting up
+################################################################################
 
 echo '=============================================='
 echo '=           Setting macOS defaults           ='
 echo '=============================================='
 echo ''
 
-#========
+# Revoke any previous sudo access
+sudo -k
+
+echo -n 'Some settings require sudo to change. '
+sudo -v || exit
+
 # General
-#========
+#==============================================================================#
 
 # Set computer name
-echo 'Setting computer name, requires sudo:'
-sudo scutil --set ComputerName 'falcon'
-sudo scutil --set HostName 'falcon'
-sudo scutil --set LocalHostName 'falcon'
+if [[ -z "$host_name" && "$1" != '-s' && "$1" != '--skip' ]]; then
+  read -p '?Enter a hostname, or empty to skip: ' host_name
+fi
+
+if [[ -n "$host_name" ]]; then
+  echo "Setting computer name to '$host_name'"
+  sudo scutil --set ComputerName "$host_name"
+  sudo scutil --set HostName "$host_name"
+  sudo scutil --set LocalHostName "$host_name"
+fi
 
 # Disable the sound effects on boot
 sudo nvram SystemAudioVolume=' '
@@ -61,27 +77,19 @@ defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Disable Remote Control Infrared Receiver
-echo ''
-echo 'Disabling Remote Control Infrared Receiver, requires sudo:'
 sudo defaults write /Library/Preferences/com.apple.driver.AppleIRController DeviceEnabled -int 0
 
-# Sets Screen Saver
+# Sets Screen Saver to Shifting Tiles from Google Drive's Wallpapers folder
 defaults -currentHost write com.apple.ScreenSaverPhotoChooser CustomFolderDict -dict identifier "${HOME}/Documents/Google Drive/Wallpapers" name 'Wallpapers'
 defaults -currentHost write com.apple.ScreenSaverPhotoChooser SelectedFolderPath -string "${HOME}/Documents/Google Drive/Wallpapers"
 defaults -currentHost write com.apple.ScreenSaverPhotoChooser SelectedSource -int 4
-
 defaults -currentHost write com.apple.ScreenSaver.iLifeSlideShows styleKey -string 'ShiftingTiles'
-
 defaults -currentHost write com.apple.screensaver showClock -bool true
 defaults -currentHost write com.apple.screensaver moduleDict -dict-add moduleName 'iLifeSlideshows'
 defaults -currentHost write com.apple.screensaver moduleDict -dict-add path '/System/Library/Frameworks/ScreenSaver.framework/Resources/iLifeSlideshows.saver'
 
-#=========
 # Firewall
-#=========
-
-echo ''
-echo 'Setting up Firewall, requires sudo:'
+#==============================================================================#
 
 # Enable Firewall
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
@@ -91,9 +99,8 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setloggingmode on
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsigned off
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setallowsignedapp off
 
-#==========================
 # Keyboard, Trackpad, input
-#==========================
+#==============================================================================#
 
 # Disable natural scroll direction
 defaults write -g 'com.apple.swipescrolldirection' -bool false
@@ -139,9 +146,8 @@ defaults write com.apple.dock showDesktopGestureEnabled -bool true
 # Disable Rubberband Scrolling
 defaults write -g NSScrollViewRubberbanding -bool false
 
-#=====
 # Dock
-#=====
+#==============================================================================#
 
 # Auto hide/show
 defaults write com.apple.dock autohide -bool true
@@ -189,11 +195,18 @@ defaults write com.apple.dock wvous-bl-modifier -int 0
 # Wipe all (default) app icons from the Dock
 # This is only really useful when setting up a new Mac, or if you don’t use
 # the Dock to launch apps.
-#defaults write com.apple.dock persistent-apps -array
 
-#=======
+if [[ "$1" != '-s' && "$1" != '--skip' ]]; then
+  read -p '?Wipe all app icons from the Dock [yN]? ' -n 1
+  echo ''
+
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    defaults write com.apple.dock persistent-apps -array
+  fi
+fi
+
 # Finder
-#=======
+#==============================================================================#
 
 # Show hidden files
 defaults write com.apple.Finder AppleShowAllFiles -bool true
@@ -241,9 +254,8 @@ chflags nohidden ~/Library
 # Show the /Volumes folder
 sudo chflags nohidden /Volumes
 
-#=======
 # Safari
-#=======
+#==============================================================================#
 
 defaults write com.apple.Safari AlwaysShowTabBar -bool true
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
@@ -265,14 +277,14 @@ defaults write com.apple.Safari UniversalSearchEnabled -bool false
 defaults write com.apple.Safari WebsiteSpecificSearchEnabled -bool false
 defaults write com.apple.Safari PreloadTopHit -bool false
 
-#==========
 # Spotlight
-#==========
-
-echo ''
-echo 'Opening System Preferences...'
-echo 'Please go to Spotlight and then close'
-open -W -a 'System Preferences'
+#==============================================================================#
+if [[ "$1" != '-s' && "$1" != '--skip' ]]; then
+  echo ''
+  echo 'Opening System Preferences...'
+  echo 'Please go to Spotlight and then close'
+  open -W -a 'System Preferences'
+fi
 
 # Remove options for Spotlight to lookup things on Internet
 new_spotlight=$(defaults read com.apple.Spotlight orderedItems)
@@ -281,9 +293,8 @@ new_spotlight=$(echo "$new_spotlight" | sed -E 's/(enabled=)1(;name="(MENU_SPOTL
 defaults write com.apple.Spotlight orderedItems "$new_spotlight"
 defaults write com.apple.lookup.shared LookupSuggestionsDisabled -bool false
 
-#===========
 # Other apps
-#===========
+#==============================================================================#
 
 # Show all processes in Activity Monitor
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
