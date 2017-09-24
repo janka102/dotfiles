@@ -26,14 +26,19 @@ setopt notify
 setopt promptsubst
 setopt nobeep
 
-#==============
+IS_MACOS="$([[ `uname -s` = 'Darwin' ]] && printf '1')"
+
 # Env variables
-#==============
+#==============================================================================#
 
-export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_NO_INSECURE_REDIRECT=1
+# macOS only
+if [[ -n "$IS_MACOS" ]]; then
+  export HOMEBREW_NO_ANALYTICS=1
+  export HOMEBREW_NO_INSECURE_REDIRECT=1
 
-path=($path /usr/local/sbin $(brew --prefix coreutils)/libexec/gnubin)
+  path=($path /usr/local/sbin $(brew --prefix coreutils)/libexec/gnubin)
+fi
+
 export EDITOR='vim'
 export LESS='-giMRw -z-4'
 
@@ -41,51 +46,62 @@ if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
 fi
 
-#========
 # Aliases
-#========
+#==============================================================================#
 
 alias reload="exec $SHELL -i"
 alias editconfig="$EDITOR ~/.zshrc && reload"
-
-# PlistBuddy alias, because sometimes `defaults` just doesn’t cut it
-alias plistbuddy='/usr/libexec/PlistBuddy'
-
 alias g='git'
 
-LS_OPTIONS='-FG' # show symbol at end and show color
+LS_OPTIONS='-Fh' # show symbol at end and human readable sizes
 
-alias ls="command ls $LS_OPTIONS"
-alias ll='ls -hl'
-alias la='ls -Ahl'
+# macOS only
+if [[ -n "$IS_MACOS" ]]; then
+  # PlistBuddy alias, because sometimes `defaults` just doesn’t cut it
+  alias plistbuddy='/usr/libexec/PlistBuddy'
 
-alias bi='brew install'
-alias bs='brew search'
-alias bu='brew update && brew upgrade'
-alias cask='brew cask'
-alias ci='brew cask install'
-alias cs='brew cask search'
+  # Homebrew
+  alias bi='brew install'
+  alias bI='brew info'
+  alias bs='brew search'
+  alias bu='brew update && brew upgrade'
+  alias cask='brew cask'
+  alias ci='brew cask install'
+  alias cI='brew cask info'
+  alias cs='brew cask search'
 
-#==========
+  LS_OPTIONS="$LS_OPTIONS -G" # show color
+fi
+
+alias ll="ls $LS_OPTIONS -l"
+alias la="ls $LS_OPTIONS -Al"
+
 # Functions
-#==========
+#==============================================================================#
 
-togglefiles() {
-  # pass -y to relaunch Finder automatically
-  current="$(defaults read com.apple.finder AppleShowAllFiles)"
-  new="YES"
-
-  if [[ "$current" == "$new" ]]; then
-    new="NO"
-  fi
-
-  defaults write com.apple.finder AppleShowAllFiles $new
-  [[ "$1" == "-y" ]] || read -q '?Relaunch Finder now [Yn]? ' relaunch
-
-  if [[ "$relaunch" == "y" ]]; then
-    killall Finder /System/Library/CoreServices/Finder.app
-  fi
+mkcd() {
+  mkdir -p "$1" && cd "$1"
 }
+
+# macOS only
+if [[ -n "$IS_MACOS" ]]; then
+  togglefiles() {
+    # pass -y to relaunch Finder automatically
+    current="$(defaults read com.apple.finder AppleShowAllFiles)"
+    new='YES'
+
+    if [[ "$current" == "$new" ]]; then
+      new='NO'
+    fi
+
+    defaults write com.apple.finder AppleShowAllFiles $new
+    [[ "$1" == '-y' ]] || read -q '?Relaunch Finder now [Yn]? ' relaunch
+
+    if [[ "$relaunch" == 'y' ]]; then
+      killall Finder /System/Library/CoreServices/Finder.app
+    fi
+  }
+fi
 
 source ~/.zprompt
 
