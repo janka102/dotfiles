@@ -39,6 +39,7 @@ if [[ -n "$IS_MACOS" ]]; then
   path=($path /usr/local/sbin $(brew --prefix coreutils)/libexec/gnubin)
 fi
 
+export NVM_DIR="$HOME/.nvm"
 export EDITOR='vim'
 export LESS='-giMRw -z-4'
 
@@ -48,10 +49,6 @@ fi
 
 # Aliases
 #==============================================================================#
-
-alias reload="exec $SHELL -i"
-alias editconfig="$EDITOR ~/.zshrc && reload"
-alias g='git'
 
 LS_OPTIONS='-Fh' # show symbol at end and human readable sizes
 
@@ -73,14 +70,24 @@ if [[ -n "$IS_MACOS" ]]; then
   LS_OPTIONS="$LS_OPTIONS -G" # show color
 fi
 
+alias l="ls $LS_OPTIONS"
 alias ll="ls $LS_OPTIONS -l"
 alias la="ls $LS_OPTIONS -Al"
+alias g='git'
+alias reload="exec $SHELL -i"
+alias editconfig="$EDITOR ~/.zshrc && reload"
 
 # Functions
 #==============================================================================#
 
 mkcd() {
   mkdir -p "$1" && cd "$1"
+}
+
+# This lazy loads actual nvm, because the load time for nvm is so long
+nvm() {
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || return
+  nvm "$@"
 }
 
 # macOS only
