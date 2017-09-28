@@ -26,7 +26,7 @@ setopt notify
 setopt promptsubst
 setopt nobeep
 
-IS_MACOS="$([[ `uname -s` = 'Darwin' ]] && printf '1')"
+IS_MACOS="$([[ `uname -s` == 'Darwin' ]] && printf '1')"
 
 # Env variables
 #==============================================================================#
@@ -66,6 +66,10 @@ if [[ -n "$IS_MACOS" ]]; then
   alias ci='brew cask install'
   alias cI='brew cask info'
   alias cs='brew cask search'
+
+  # FTP
+  alias startftp='sudo -s launchctl load -w /System/Library/LaunchDaemons/ftp.plist'
+  alias stopftp='sudo -s launchctl unload -w /System/Library/LaunchDaemons/ftp.plist'
 
   LS_OPTIONS="$LS_OPTIONS -G" # show color
 fi
