@@ -72,6 +72,8 @@ if [[ -n "$IS_MACOS" ]]; then
   alias stopftp='sudo -s launchctl unload -w /System/Library/LaunchDaemons/ftp.plist'
 
   LS_OPTIONS="$LS_OPTIONS -G" # show color
+else
+  LS_OPTIONS="$LS_OPTIONS --color"
 fi
 
 alias l="ls $LS_OPTIONS"
@@ -86,6 +88,10 @@ alias editconfig="$EDITOR ~/.zshrc && reload"
 
 mkcd() {
   mkdir -p "$1" && cd "$1"
+}
+
+cdtemp() {
+  cd "$(mktemp -d '/tmp/temp.XXXX')"
 }
 
 # This lazy loads actual nvm, because the load time for nvm is so long
@@ -113,6 +119,9 @@ if [[ -n "$IS_MACOS" ]]; then
     fi
   }
 fi
+
+# Other files
+#==============================================================================#
 
 source ~/.zprompt
 
