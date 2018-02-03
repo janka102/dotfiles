@@ -42,7 +42,7 @@ echo 'Installing terminal programs...'
 # Don’t forget to add `$(brew --prefix coreutils)/libexec/gnubin` to `$PATH`
 brew install bash coreutils openssl zsh                            # system stuff
 brew install clang-format git git-town htop node sshfs             # things used often to kinda often
-brew install imagemagick optipng p7zip wget # things used not so often
+brew install imagemagick optipng p7zip wget                        # things used not so often
 
 if ! fgrep -q '/usr/local/bin/zsh' /etc/shells; then
   echo 'Switching shell to newly installed zsh... requires sudo:'

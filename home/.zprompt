@@ -1,3 +1,14 @@
+# Examples
+#
+# user in ~/path
+# % 
+#
+# root in ~/path
+# # 
+#
+# user@ssh_machine in ~/path
+# % 
+
 prompt_user() {
   local user="$(whoami)"
 
@@ -34,14 +45,3 @@ build_prompt() {
 }
 
 PROMPT="$(build_prompt)"
-
-# Examples
-#
-# user in ~/path
-# % 
-#
-# root in ~/path
-# # 
-#
-# user@ssh_machine in ~/path
-# % 
