@@ -74,6 +74,8 @@ if [[ -n "$IS_MACOS" ]]; then
   LS_OPTIONS="$LS_OPTIONS -G" # show color
 else
   LS_OPTIONS="$LS_OPTIONS --color"
+
+  alias open="xdg-open"
 fi
 
 alias l="ls $LS_OPTIONS"
