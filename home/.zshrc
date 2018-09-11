@@ -96,10 +96,43 @@ cdtemp() {
   cd "$(mktemp -d '/tmp/temp.XXXX')"
 }
 
-# This lazy loads actual nvm, because the load time for nvm is so long
+# This lazy loads actual nvm, node, and npm, because the load time for nvm is so long
+# If one is called, the others are loaded too
 nvm() {
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || return
-  nvm "$@"
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    unset -f nvm
+    unset -f node
+    unset -f npm
+    . "$NVM_DIR/nvm.sh"
+    nvm "$@"
+  else
+    echo 'nvm not installed'
+    return 1
+  fi
+}
+node() {
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    unset -f node
+    unset -f nvm
+    unset -f npm
+    nvm --version > /dev/null # implicitly load nvm if not already loaded
+    node "$@"
+  else
+    echo 'nvm not installed'
+    return 1
+  fi
+}
+npm() {
+  if [ -s "$NVM_DIR/nvm.sh" ]; then
+    unset -f npm
+    unset -f nvm
+    unset -f node
+    nvm --version > /dev/null # implicitly load nvm if not already loaded
+    npm "$@"
+  else
+    echo 'nvm not installed'
+    return 1
+  fi
 }
 
 # macOS only
