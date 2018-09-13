@@ -112,9 +112,6 @@ nvm() {
 }
 node() {
   if [ -s "$NVM_DIR/nvm.sh" ]; then
-    unset -f node
-    unset -f nvm
-    unset -f npm
     nvm --version > /dev/null # implicitly load nvm if not already loaded
     node "$@"
   else
@@ -124,9 +121,6 @@ node() {
 }
 npm() {
   if [ -s "$NVM_DIR/nvm.sh" ]; then
-    unset -f npm
-    unset -f nvm
-    unset -f node
     nvm --version > /dev/null # implicitly load nvm if not already loaded
     npm "$@"
   else
