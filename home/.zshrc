@@ -41,7 +41,7 @@ fi
 
 export NVM_DIR="$HOME/.nvm"
 export EDITOR='vim'
-export LESS='-giMRw -z-4'
+export LESS='-FgiMR -z-4'
 
 if [[ -z "$LANG" ]]; then
   export LANG='en_US.UTF-8'
