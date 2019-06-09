@@ -14,7 +14,7 @@ prompt_user() {
 
   if [[ "$user" == "root" ]]; then
     echo -n "%F{red}"
-  else  
+  else
     echo -n "%F{yellow}"
   fi
 
