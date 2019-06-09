@@ -92,7 +92,7 @@ mkcd() {
   mkdir -p "$1" && cd "$1"
 }
 
-cdtemp() {
+tempcd() {
   cd "$(mktemp -d '/tmp/temp.XXXX')"
 }
 
