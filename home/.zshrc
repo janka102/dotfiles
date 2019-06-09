@@ -96,48 +96,35 @@ tempcd() {
   cd "$(mktemp -d '/tmp/temp.XXXX')"
 }
 
-# This lazy loads actual nvm, node, npm, and npx because the load time for nvm is so long
-# If one is called, the others are loaded too
-nvm() {
-  if [ -s "$NVM_DIR/nvm.sh" ]; then
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # This lazy loads actual nvm, node, npm, and npx because the load time for nvm is so long
+  # If one is called, the others are loaded too
+  lazy_load_nvm() {
+    unset -f lazy_load_nvm
+
     unset -f nvm
     unset -f node
     unset -f npm
     unset -f npx
-    . "$NVM_DIR/nvm.sh"
+    source "$NVM_DIR/nvm.sh"
+  }
+  nvm() {
+    lazy_load_nvm
     nvm "$@"
-  else
-    echo 'nvm not installed'
-    return 1
-  fi
-}
-node() {
-  if [ -s "$NVM_DIR/nvm.sh" ]; then
-    nvm --version > /dev/null # implicitly load nvm if not already loaded
-  else
-    unset -f node
-  fi
-
-  node "$@"
-}
-npm() {
-  if [ -s "$NVM_DIR/nvm.sh" ]; then
-    nvm --version > /dev/null # implicitly load nvm if not already loaded
-  else
-    unset -f npm
-  fi
-
-  npm "$@"
-}
-npx() {
-  if [ -s "$NVM_DIR/nvm.sh" ]; then
-    nvm --version > /dev/null # implicitly load nvm if not already loaded
-  else
-    unset -f npx
-  fi
-
-  npx "$@"
-}
+  }
+  node() {
+    lazy_load_nvm
+    node "$@"
+  }
+  npm() {
+    lazy_load_nvm
+    npm "$@"
+  }
+  npx() {
+    lazy_load_nvm
+    npx "$@"
+  }
+fi
 
 # macOS only
 if [[ -n "$IS_MACOS" ]]; then
@@ -162,8 +149,8 @@ fi
 # Other files
 #==============================================================================#
 
-source ~/.zprompt
-
-if [[ -f ~/.extra ]]; then
-  source ~/.extra
-fi
+for file in ~/.{zprompt,extra,zprofile}; do
+  if [[ -f "$file" ]]; then
+    source "$file"
+  fi
+done
