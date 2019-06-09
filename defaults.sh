@@ -121,7 +121,7 @@ defaults write -g NSAutomaticTextCompletionEnabled -bool false
 # Tap to click
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
 
-# Double tap and drag, with drag lock
+# Double tap and drag, without drag lock
 defaults write com.apple.AppleMultitouchTrackpad Dragging -bool true
 defaults write com.apple.AppleMultitouchTrackpad DragLock -bool false
 
