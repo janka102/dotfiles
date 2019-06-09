@@ -17,12 +17,12 @@ echo ''
 
 if [[ "$REPLY" =~ ^[yY]$ ]]; then
   echo 'Downloading certificate...'
-  curl https://sks-keyservers.net/sks-keyservers.netCA.pem -o ~/Downloads/hkps.pool.sks-keyservers.net.pem
+  curl -s https://sks-keyservers.net/sks-keyservers.netCA.pem -o ~/Downloads/hkps.pool.sks-keyservers.net.pem
   echo ''
   echo 'Needs manual verification of fingerprint for ~/Downloads/hkps.pool.sks-keyservers.net.pem'
   echo 'Please visit https://sks-keyservers.net/verify_tls.php, snippet below...'
   echo 'Downloading fingerprint snippet...'
-  curl https://sks-keyservers.net/verify_tls.php | grep -o 'The fingerprint.*</b>'
+  curl -s https://sks-keyservers.net/verify_tls.php | grep -o 'The fingerprint.*</b>'
   open ~/Downloads
 
   read -p 'Do you want to install the certificate [yN]? '
