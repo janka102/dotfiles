@@ -37,6 +37,9 @@ if [[ -n "$IS_MACOS" ]]; then
   export HOMEBREW_NO_INSECURE_REDIRECT=1
 
   path=($path /usr/local/sbin $(brew --prefix coreutils)/libexec/gnubin)
+
+elif [[ -d ~/.local/bin ]]; then
+  path=($path ~/.local/bin)
 fi
 
 export NVM_DIR="$HOME/.nvm"
